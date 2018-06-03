@@ -1,0 +1,10 @@
+beautifulsoup4==4.6.0
+Flask==1.0.2
+gunicorn==19.8.1
+img2pdf==0.2.4
+Keras==2.1.6
+matplotlib==2.2.2
+numpy==1.14.3
+Pillow==5.1.0
+tensorflow==1.8.0
+Werkzeug==0.14.1
