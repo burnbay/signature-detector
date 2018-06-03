@@ -3,10 +3,7 @@
 temp*
 
 # We skip the synthetic training data
-/signature_output/train/signed/*
-/signature_output/train/not_signed/*
-/signature_output/validate/signed/*
-/signature_output/validate/not_signed/*
+signature_output/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
