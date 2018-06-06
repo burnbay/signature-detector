@@ -6,6 +6,7 @@ from flask import make_response
 from flask import jsonify
 from flask import Response
 from werkzeug.utils import secure_filename
+from keras import backend as K
 from keras.models import load_model
 from keras.preprocessing import image
 from PIL import Image, ImageDraw, ImageFont
@@ -119,6 +120,7 @@ def predict_image(model_name, img, threshold=0.5, show=False):
         plt.axis('off')
         plt.show()
     
+    K.clear_session()
     model = load_model(model_name)
     
     pred = model.predict(img_tensor)
