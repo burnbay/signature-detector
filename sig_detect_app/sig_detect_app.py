@@ -9,34 +9,50 @@ from werkzeug.utils import secure_filename
 from keras import backend as K
 from keras.models import load_model
 from keras.preprocessing import image
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 from bs4 import BeautifulSoup as soup
 import img2pdf
+import csv
 
 ALLOWED_EXTENSIONS = set(['pdf',"png","jpg","jpeg"]) # We only allow upload of pdf and image files.
 
 app = Flask(__name__)
 
 
+def increase_contrast(file_name,factor=20):
+    img = Image.open(file_name).convert("L")
+    enhancer = ImageEnhance.Contrast(img)
+    img = enhancer.enhance(factor)
+    rgbimg = Image.new("RGBA", img.size)
+    rgbimg.paste(img)
+    rgbimg.save(file_name)
+    return
+
+
 def hocr_img(img_file_name, temp_file_name = "temp_pdf_png"):
+    os.system("rm {0}*".format(temp_file_name))
     
     file = img_file_name.rsplit('.', 1)[0]
     suffix = img_file_name.rsplit('.', 1)[1]
+
+    os.system("convert -density 300 -depth 8 -quality 85 {0} {1}-0.png".format(img_file_name, temp_file_name))
     os.system("tesseract -l nor {0} {1}-0 hocr".format(img_file_name, temp_file_name))
-    os.system("convert -density 300 -depth 8 -quality 85 {0} {1}-0.png".format(img_file_name,temp_file_name))
-    
+    #increase_contrast(img_file_name) 
+
     hocr_files = ["{0}-0.hocr".format(temp_file_name)]
     return(hocr_files)
 
 
 def hocr_pdf(pdf_file_name,temp_file_name = "temp_pdf_png"):
     os.system("rm {0}*".format(temp_file_name))
-    os.system("convert -density 300 -depth 8 -quality 85 {0} {1}.png".format(pdf_file_name,temp_file_name))
+
+    os.system("convert -density 300 -depth 8 -quality 85 {0} {1}.png".format(pdf_file_name, temp_file_name))
     png_files = glob.glob("{0}*.png".format(temp_file_name))
     
     for png_file in png_files:
         file = png_file.replace(".png","")
         os.system("tesseract -l nor {0} {1} hocr".format(png_file, file))
+        #increase_contrast(png_file)
 
     if os.path.isfile("{0}.png".format(temp_file_name)):
         os.system("mv {0}.png {0}-0.png".format(temp_file_name))
@@ -56,7 +72,8 @@ def search_hocr_for_sentence(sentence, trigger_dict, hocr, page_num):
     bbox_list = []
     
     for word_span in word_span_list:
-        word = re.sub(r'[^\w\s]','',word_span.find(text=True))
+        #word = re.sub(r'[^\w\s]','',word_span.find(text=True))
+        word = re.sub(";",":", word_span.find(text=True))
         word_id = int(word_span["id"].replace("word_1_",""))
         bbox = word_span["title"].replace(";","").split()[1:5]
         
@@ -69,9 +86,9 @@ def search_hocr_for_sentence(sentence, trigger_dict, hocr, page_num):
     
     n=0
     for i in range(len(word_list)):
-        if word_list[i] == sentence_words[0]:
+        if sentence_words[0] in word_list[i]:
             candidate_sentence = " ".join(word_list[i:(i+sentence_length)])
-            if candidate_sentence == sentence:
+            if sentence in candidate_sentence:
                 n+=1
                 bbox = bbox_list[i+sentence_length-1]
                 trigger_dict.update({sentence+" "+str(n) : {"page" : page_num,
@@ -83,12 +100,12 @@ def search_hocr_for_sentence(sentence, trigger_dict, hocr, page_num):
 
 
 def get_trigger_areas(hocr_list,
-                      trigger_sentences = ["For kjøper",
-                                           "For selger",
-                                           "Kjøpers underskrift",
-                                           "Selgers underskrift",
-                                           "Som kjøper",
-                                           "Som selger"]):
+                      trigger_sentences = "trigger_sentences.csv"):
+
+    with open(trigger_sentences) as csvfile:
+        reader = csv.reader(csvfile)
+        trigger_sentences = list(reader)[0]
+    
     trigger_dict = {}
     
     page_num=0
@@ -249,8 +266,11 @@ def upload_file():
             return redirect(request.url)
         
         # if we got a valid file:
+        
         if file and allowed_file(file.filename):
+            
             filename = remove_non_ascii(secure_filename(file.filename))        
+            
             file.save(filename)
             
             # if we got an image file:
@@ -262,9 +282,7 @@ def upload_file():
                 hocr_files = hocr_pdf(filename)
             
             response_dict = score(hocr_files)
-
-            os.system("rm {0}*".format(filename))
-            
+        
             if request.form.get('json'):
                 return(jsonify(response_dict))
             
