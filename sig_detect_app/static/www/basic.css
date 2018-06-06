@@ -1,0 +1,78 @@
+
+@font-face {
+  font-family: 'MuseoSans-300';
+  src: url('fonts/2FDE32_0_0.woff2') format('woff2'), url('fonts/2FDE32_0_0.woff') format('woff'), url('fonts/2FDE32_0_0.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'MuseoSans-500';
+  src: url('fonts/2FDE32_1_0.woff2') format('woff2'), url('fonts/2FDE32_1_0.woff') format('woff'), url('fonts/2FDE32_1_0.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'MuseoSansRounded-300';
+  src: url('fonts/2FDE32_2_0.woff2') format('woff2'), url('fonts/2FDE32_2_0.woff') format('woff'), url('fonts/2FDE32_2_0.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'MuseoSansRounded-500';
+  src: url('fonts/2FDE32_3_0.woff2') format('woff2'), url('fonts/2FDE32_3_0.woff') format('woff'), url('fonts/2FDE32_3_0.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'MuseoSansRounded-700';
+  src: url('fonts/2FDE32_4_0.woff2') format('woff2'), url('fonts/2FDE32_4_0.woff') format('woff'), url('fonts/2FDE32_4_0.ttf') format('truetype');
+}
+
+h1 {
+  color: #002776;
+  font-family: "MuseoSansRounded-700", arial, sans-serif;
+  font-weight: normal;
+  line-height: 36px;
+  font-size: 28px;
+}
+
+h2 {
+  color: #002776;
+  font-family: "MuseoSansRounded-700", arial, sans-serif;
+  font-weight: normal;
+  line-height: 32px;
+  font-size: 24px;
+}
+
+h3 {
+  color: #002776;
+  font-family: "MuseoSansRounded-700", arial, sans-serif;
+  font-weight: normal;
+  line-height: 28px;
+  font-size: 20px;
+}
+
+h4,
+responsive-table__caption {
+  color: #002776;
+  font-family: "MuseoSansRounded-700", arial, sans-serif;
+  font-weight: normal;
+  line-height: 26px;
+  font-size: 18px;
+}
+
+h5 {
+  color: #002776;
+  font-family: "MuseoSansRounded-700", arial, sans-serif;
+  font-weight: normal;
+  line-height: 24px;
+  font-size: 16px;
+}
+
+h6 {
+  color: #002776;
+  font-family: "MuseoSansRounded-700", arial, sans-serif;
+  font-weight: normal;
+  line-height: 24px;
+  font-size: 16px;
+}
+
+body {
+  color: #676767;
+  font-family: "MuseoSans-500", arial, sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 22px;
+}

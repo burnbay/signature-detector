@@ -292,8 +292,12 @@ def upload_file():
         
     return '''
     <!doctype html>
+    <html>
+    <head>
     <title>Signature detection app</title>
-    
+    <link rel="stylesheet" href="static/www/basic.css">
+    </head>
+    <body>
     <h1>Signature detector v0.1</h2>
     Upload PDF/PNG/JPG-file to search for signatures:<br>
     
@@ -304,6 +308,8 @@ def upload_file():
     </form>
     <br>
     <i>(Large multipage files may take a while, be patient.)</i>
+    </body>
+    </html>
     '''
 
 if __name__ == "__main__":
